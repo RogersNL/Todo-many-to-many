@@ -31,7 +31,7 @@ namespace ToDo.Tests
     {
       //Arrange
       Item testItem = new Item("Mow the lawn");
-      
+
       //Act
       testItem.Save();
       List<Item> result = Item.GetAll();
@@ -80,6 +80,37 @@ namespace ToDo.Tests
       //Assert
       Assert.AreEqual(testItem, foundItem);
     }
+    [TestMethod]
+    public void Edit_UpdatesItemInDatabase_String()
+    {
+      //Arrange
+      string firstDescription = "Walk the Dog";
+      Item testItem = new Item(firstDescription, 1);
+      testItem.Save();
+      string secondDescription = "Mow the lawn";
 
+      //Act
+      testItem.Edit(secondDescription);
+
+      string result = Item.Find(testItem.GetId()).GetDescription();
+
+      //Assert
+      Assert.AreEqual(secondDescription , result);
+    }
+    // [TestMethod]
+    // public void Delete_TestItemInDB_String()
+    // {
+    //   //Arrange
+    //   Item testItem = new Item("Mow the lawn");
+    //   testItem.Save();
+    //   Item emptyItem = new Item();
+    //
+    //   //Act
+    //   Item foundItem = Item.Find(testItem.GetId());
+    //   testItem.Delete();
+    //   Item newfoundItem = Item.Find(testItem.GetId());
+    //   //Assert
+    //   Assert.AreEqual(testItem, emptyItem);
+    // }
   }
 }

@@ -118,7 +118,7 @@ namespace ToDo.Models
          MySqlConnection conn = DB.Connection();
          conn.Open();
          var cmd = conn.CreateCommand() as MySqlCommand;
-           cmd.CommandText = @"SELECT * FROM 'items' WHERE id = @thisId;";
+           cmd.CommandText = @"SELECT * FROM items WHERE id = @thisId;";
          // more logic will go here!
          MySqlParameter thisId = new MySqlParameter();
            thisId.ParameterName = "@thisId";
@@ -142,18 +142,64 @@ namespace ToDo.Models
             }
             return foundItem;
      }
+     public void Edit(string newDescription)
+      {
+        MySqlConnection conn = DB.Connection();
+        conn.Open();
+        var cmd = conn.CreateCommand() as MySqlCommand;
+        cmd.CommandText = @"UPDATE items SET description = @newDescription WHERE id = @searchId;";
 
-    // public void Save()
-    // {
-    //   _instances.Add(this);
-    // }
-    // public static void ClearAll()
-    // {
-    //   _instances.Clear();
-    // }
-    // public static Item Find(int searchId)
-    // {
-    //   return _instances[searchId-1];
-    // }
+        MySqlParameter searchId = new MySqlParameter();
+        searchId.ParameterName = "@searchId";
+        searchId.Value = _id;
+        cmd.Parameters.Add(searchId);
+
+        MySqlParameter description = new MySqlParameter();
+        description.ParameterName = "@newDescription";
+        description.Value = newDescription;
+        cmd.Parameters.Add(description);
+
+        cmd.ExecuteNonQuery();
+        _description = newDescription;
+
+        conn.Close();
+        if (conn != null)
+        {
+            conn.Dispose();
+        }
+      }
+      public void Delete()
+       {
+         MySqlConnection conn = DB.Connection();
+         conn.Open();
+         var cmd = conn.CreateCommand() as MySqlCommand;
+         cmd.CommandText = @"DELETE FROM items WHERE id = @thisId;";
+
+         MySqlParameter thisId = new MySqlParameter();
+         thisId.ParameterName = "@thisId";
+         thisId.Value = _id;
+         cmd.Parameters.Add(thisId);
+
+         cmd.ExecuteNonQuery();
+
+
+         conn.Close();
+         if (conn != null)
+         {
+             conn.Dispose();
+         }
+       }
+      // public void Save()
+      // {
+      //   _instances.Add(this);
+      // }
+      // public static void ClearAll()
+      // {
+      //   _instances.Clear();
+      // }
+      // public static Item Find(int searchId)
+      // {
+      //   return _instances[searchId-1];
+      // }
+    }
   }
-}

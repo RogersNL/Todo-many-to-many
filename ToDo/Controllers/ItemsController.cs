@@ -27,16 +27,37 @@ namespace ToDo.Controllers
     [HttpPost("/items")]
     public ActionResult Create()
     {
-      Item newItem = new Item (Request.Form["new-item"]);
+      Item newItem = new Item (Request.Form["newitem"]);
       // newItem.Save();
       List<Item> allItems = Item.GetAll();
       return View("Index", allItems);
     }
+    [HttpGet("/items/{id}/update")]
+    public ActionResult UpdateForm(int id)
+    {
+        Item thisItem = Item.Find(id);
+        return View(thisItem);
+    }
+    [HttpPost("/items/{id}/update")]
+    public ActionResult Update(int id)
+    {
+        Item thisItem = Item.Find(id);
+        thisItem.Edit(Request.Form["newname"]);
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet("/items/{id}/delete")]
+    public ActionResult Delete(int id)
+    {
+        Item thisItem = Item.Find(id);
+        thisItem.Delete();
+        return RedirectToAction("Index");
+    }
     // [HttpPost("/items/delete")]
     // public ActionResult DeleteAll()
     // {
-    //     Item.ClearAll();
-    //     return View();
+    //   Item.ClearAll();
+    //   return View();
     // }
     // [HttpGet("/items/{id}")]
     // public ActionResult Details(int id)
