@@ -7,10 +7,12 @@ namespace ToDo.Models
   {
     private string _description;
     private int _id;
+    private int _categoryId;
     // private static List<Item> _instances = new List<Item> {};
-    public Item(string Description, int Id = 0)
+    public Item(string Description, int Id = 0, int CategoryId = 0)
     {
       _id = Id;
+      _categoryId = CategoryId;
       _description = Description;
     }
 
@@ -68,6 +70,10 @@ namespace ToDo.Models
     public int GetId()
     {
       return _id;
+    }
+    public int GetCategoryId()
+    {
+      return _categoryId;
     }
     public static List<Item> GetAll()
     {
