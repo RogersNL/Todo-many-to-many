@@ -11,5 +11,10 @@ namespace ToDo.Controllers
             return View();
             // return new EmptyResult();
         }
+        [HttpGet("/Success")]
+        public ActionResult Success()
+        {
+          return View();
+        }
     }
 }

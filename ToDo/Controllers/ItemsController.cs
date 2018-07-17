@@ -22,15 +22,14 @@ namespace ToDo.Controllers
     [HttpGet("/items/new")]
     public ActionResult CreateForm()
     {
-        return View();
+      return View();
     }
     [HttpPost("/items")]
     public ActionResult Create()
     {
-      Item newItem = new Item (Request.Form["newitem"]);
-      // newItem.Save();
-      List<Item> allItems = Item.GetAll();
-      return View("Index", allItems);
+      Item newItem = new Item(Request.Form["item-description"]);
+      newItem.Save();
+      return RedirectToAction("Success", "Home");
     }
     [HttpGet("/items/{id}/update")]
     public ActionResult UpdateForm(int id)
@@ -49,9 +48,9 @@ namespace ToDo.Controllers
     [HttpGet("/items/{id}/delete")]
     public ActionResult Delete(int id)
     {
-        Item thisItem = Item.Find(id);
-        thisItem.Delete();
-        return RedirectToAction("Index");
+      Item thisItem = Item.Find(id);
+      thisItem.Delete();
+      return RedirectToAction("Index");
     }
     // [HttpPost("/items/delete")]
     // public ActionResult DeleteAll()
@@ -59,11 +58,25 @@ namespace ToDo.Controllers
     //   Item.ClearAll();
     //   return View();
     // }
-    // [HttpGet("/items/{id}")]
-    // public ActionResult Details(int id)
-    // {
-    //     Item item = Item.Find(id);
-    //     return View(item);
-    // }
+    [HttpGet("/items/{id}")]
+    public ActionResult Details(int id)
+    {
+      Dictionary<string, object> model = new Dictionary<string, object>();
+      Item selectedItem = Item.Find(id);
+      List<Category> itemCategories = selectedItem.GetCategories();
+      List<Category> allCategories = Category.GetAll();
+      model.Add("selectedItem", selectedItem);
+      model.Add("itemCategories", itemCategories);
+      model.Add("allCategories", allCategories);
+      return View(model);
+    }
+    [HttpPost("/items/{itemId}/categories/new")]
+    public ActionResult AddCategory(int itemId)
+    {
+      Item item = Item.Find(itemId);
+      Category category = Category.Find(Int32.Parse(Request.Form["category-id"]));
+      item.AddCategory(category);
+      return RedirectToAction("Details",  new { id = itemId });
+    }
   }
 }
